@@ -1,1 +1,104 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>कलर प्रेडिक्शन लाइव</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #111; color: white; margin: 0; padding: 20px; text-align: center; }
+        .card { background: #1e1e1e; max-width: 400px; margin: auto; padding: 20px; border-radius: 15px; border: 1px solid #333; box-shadow: 0 4px 15px rgba(0,0,0,0.5); }
+        .timer-box { font-size: 28px; color: #ffcc00; font-weight: bold; margin: 15px 0; background: #2a2a2a; padding: 10px; border-radius: 8px; }
+        .btn-zone { display: flex; justify-content: space-around; margin: 20px 0; }
+        .btn { padding: 15px 35px; font-size: 18px; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; color: white; transition: 0.2s; }
+        .green { background: #00c853; }
+        .red { background: #d50000; }
+        .display-ball { width: 90px; height: 90px; background: #444; border-radius: 50%; margin: 25px auto; border: 4px solid #333; }
+        .win-lose { font-size: 22px; font-weight: bold; margin-top: 15px; }
+        .deposit-box { background: #292929; border: 1px dashed #ffcc00; padding: 15px; border-radius: 10px; margin-top: 25px; }
+        .dep-btn { background: #25d366; color: white; padding: 10px 20px; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-block; margin-top: 10px; }
+        .wallet { font-size: 18px; color: #ffcc00; margin-bottom: 10px; }
+    </style>
+</head>
+<body>
+
+<div class="card">
+    <h2>🏆 कलर प्रेडिक्शन लाइव 🏆</h2>
+    
+    <div class="wallet">💰 मेरा बैलेंस: ₹<span id="balance">0</span></div>
+    <div class="timer-box">⏰ समय शेष: <span id="timer">30</span>s</div>
+    
+    <div class="btn-zone">
+        <button class="btn green" onclick="select('GREEN')">GREEN</button>
+        <button class="btn red" onclick="select('RED')">RED</button>
+    </div>
+
+    <div id="user-bet">चुना गया रंग: कोई नहीं</div>
+    <div class="display-ball" id="ball"></div>
+    <div class="win-lose" id="game-result">परिणाम का इंतज़ार करें...</div>
+
+    <div class="deposit-box">
+        <h3>💰 रिचार्ज / डिपॉजिट करें</h3>
+        <p style="font-size: 14px; color: #aaa; margin: 5px 0;">हमारे UPI ID पर पैसे भेजें:</p>
+        <strong style="color: #fff; font-size: 16px; background: #000; padding: 5px; border-radius: 5px;">7970688435@ybl</strong>
+        <p style="font-size: 13px; color: #ff9800; margin: 10px 0 0 0;">⚠️ पैसे भेजने के बाद स्क्रीनशॉट नीचे व्हाट्सएप पर भेजें, बैलेंस 2 मिनट में जोड़ दिया जाएगा।</p>
+        <a href="https://wa.meैंने डिपॉजिट किया है, कृपया बैलेंस जोड़ें" target="_blank" class="dep-btn">🟢 व्हाट्सएप पर स्क्रीनशॉट भेजें</a>
+    </div>
+</div>
+
+<script>
+    let sec = 30; let betColor = ""; let canBet = true; let currentBalance = 0;
+    const timerDisp = document.getElementById("timer");
+    const ball = document.getElementById("ball");
+    const resultDisp = document.getElementById("game-result");
+    const betDisp = document.getElementById("user-bet");
+    const balDisp = document.getElementById("balance");
+
+    setInterval(() => {
+        if (sec > 0) {
+            sec--;
+            timerDisp.innerText = sec;
+            if (sec <= 5) { canBet = false; resultDisp.innerText = "दांव बंद हो चुका है..."; }
+        } else {
+            showWinner();
+            sec = 30;
+        }
+    }, 1000);
+
+    function select(color) {
+        if (!canBet) return;
+        if (currentBalance < 10) {
+            alert("गेम खेलने के लिए न्यूनतम ₹10 का बैलेंस होना ज़रूरी है! कृपया पहले डिपॉजिट करें।");
+            return;
+        }
+        betColor = color;
+        betDisp.innerText = "चुना गया रंग: " + color + " (₹10 दांव पर)";
+    }
+
+    function showWinner() {
+        const pool = ["RED", "GREEN"];
+        const winner = pool[Math.floor(Math.random() * pool.length)];
+        ball.style.background = winner === "RED" ? "#d50000" : "#00c853";
+
+        if (betColor === "") { 
+            resultDisp.innerText = "परिणाम: " + winner; 
+        } else if (betColor === winner) { 
+            resultDisp.innerText = "🎉 आप जीत गए!"; 
+            currentBalance += 10; 
+            balDisp.innerText = currentBalance;
+        } else { 
+            resultDisp.innerText = "❌ आप हार गए!"; 
+            currentBalance -= 10; 
+            balDisp.innerText = currentBalance;
+        }
+
+        setTimeout(() => {
+            ball.style.background = "#444";
+            resultDisp.innerText = "परिणाम का इंतज़ार करें...";
+            betDisp.innerText = "चुना गया रंग: कोई नहीं";
+            betColor = ""; canBet = true;
+        }, 4000);
+    }
+</script>
+</body>
+</html>
 
